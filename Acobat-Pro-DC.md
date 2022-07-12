@@ -17,6 +17,8 @@ The software was downloaded from [NJU itsc](https://itsc.nju.edu.cn/zbrj/list.ht
   - Restart
   - `Documents` -> `Open Settings`:
     - Tick Restore last view settings when reopening
+  - `General`:
+    - Untick Open documents as new tabs in the same window (required relaunch)
 
 ## HotKey
 
