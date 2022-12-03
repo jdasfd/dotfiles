@@ -11,10 +11,11 @@ is_installed <- function(package) {
 basic_libs <- c("devtools", "reshape2", "getopt", "foreach", "doParallel", "tidyverse")
 graphics_libs <- c("scales", "gridExtra", "knitr", "rmarkdown", "kableExtra", "extrafont", "tikzDevice", "pander")
 stat_libs <- c("survival", "randomForestSRC", "pROC", "verification", "timeROC", "survminer", "VennDiagram", "vcd")
+clust_libs <- c("densityClust", "mclust", "FNN", "tmvnsim")
 bio_libs <- c("BiocManager", "ape", "adephylo", "genetics", "poppr", "taxize", "brranching")
 misc_libs <- c("conquer", "covr", "deldir", "gmodels", "LearnBayes", "openxlsx", "rio", "rvcheck", "units")
 
-for(library in c(basic_libs, graphics_libs, stat_libs, bio_libs, misc_libs ) ) {
+for(library in c(basic_libs, graphics_libs, stat_libs, clust_libs, bio_libs, misc_libs ) ) {
     if(!is_installed(library)) {
         install.packages(library, repos="https://mirrors4.tuna.tsinghua.edu.cn/CRAN")
     }
@@ -23,9 +24,8 @@ BiocManager::install(version = "3.15", ask = FALSE)
 
 # bioconductor packages
 bioC_libs <- c("biomaRt", "GenomicDataCommons", "GEOquery", "bsseq", "DSS", "scran", "scater", "edgeR", "pheatmap", "monocle", "DESeq2", "clusterProfiler", "factoextra")
-bioC_anno <- c("AnnotationDbi", "org.Hs.eg.db")
 
-for(library in c( bioC_libs, bioC_anno ) ) {
+for(library in c( bioC_libs ) ) {
     if(!is_installed(library)) {
         BiocManager::install(library, update=FALSE, version = "3.15")
     }
