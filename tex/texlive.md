@@ -7,7 +7,7 @@
 ```shell
 Rscript -e '
     install.packages("tinytex", repos="https://mirrors4.tuna.tsinghua.edu.cn/CRAN")
-    tinytex::install_tinytex()
+    tinytex::install_tinytex(force = TRUE)
     tinytex:::install_yihui_pkgs()
     '
 ```
@@ -153,6 +153,7 @@ mv Fira-4.202/ttf/* ~/.fonts
 rm -fr Fira-4.202
 rm Fira.tar.gz
 
+# Charter
 curl -L 'https://practicaltypography.com/fonts/Charter%20210112.zip' > Charter.zip
 
 unzip -j Charter.zip -d ~/.fonts '*.ttf'
@@ -172,6 +173,13 @@ curl -LO https://github.com/adobe-fonts/source-han-serif/releases/download/2.001
 unzip -j 09_SourceHanSerifSC.zip -d ~/.fonts '*.otf'
 
 rm 09_SourceHanSerifSC.zip
+
+# LXGW WenKai GB 霞鹜文楷 GB
+curl -LO https://github.com/lxgw/LxgwWenKai/releases/download/v1.250/lxgw-wenkai-v1.250.zip
+
+unzip -j lxgw-wenkai-v1.250.zip -d ~/.fonts '*.ttf'
+
+rm lxgw-wenkai-*.zip
 
 fc-cache -fv .fonts
 

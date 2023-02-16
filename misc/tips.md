@@ -15,10 +15,10 @@ screen -dmS op htop # Start a screen named `op` and run `htop`
 screen -S op -x -X screen redis-server
 screen -S op -x -X screen mysqld_safe
 
-# linux
+# linux, v2ray 5
 screen -S op -x -X screen ~/v2ray/v2ray run -config ~/config.json
 
-# mac
+# mac, v2ray 4
 screen -S op -x -X screen v2ray -config ~/config.json
 
 ```
@@ -38,6 +38,8 @@ python3 vmess2json.py --inbounds socks:1080 ${vmess_url} > config.json
 v2ray run -config config.json &
 
 export ALL_PROXY=socks5h://localhost:1080
+
+# export ALL_PROXY=socks5h://192.168.31.116:10808
 
 curl google.com
 
@@ -267,6 +269,17 @@ nc -l -p 7777 | pv | tar -x             # on the destination machine
 tar -c . | pv | nc wq.nju.edu.cn 7777   # on the source machine
 ```
 
+## 列出 ssh 支持的加密方式
+
+```shell
+# local
+ssh -Q cipher
+
+# remote
+nmap --script ssh2-enum-algos -sV -p 22 202.119.37.251
+
+```
+
 ## 使用 `rsync` 传送文件
 
 * rsync
@@ -285,7 +298,7 @@ tar -c . | pv | nc wq.nju.edu.cn 7777   # on the source machine
 前一个目录后要跟上 `/`, 后一个不要.
 
 ```bash
-rsync -avP -e "ssh -T -c arcfour -o Compression=no -x" ~/data/anchr/col_0/3_pacbio/ wangq@wq.nju.edu.cn:data/anchr/col_0/3_pacbio
+rsync -avP -e "ssh -T -c chacha20-poly1305@openssh.com -o Compression=no -x" ~/data/anchr/col_0/3_pacbio/ wangq@wq.nju.edu.cn:data/anchr/col_0/3_pacbio
 ```
 
 ## ssh-copy-id
@@ -293,6 +306,17 @@ rsync -avP -e "ssh -T -c arcfour -o Compression=no -x" ~/data/anchr/col_0/3_pacb
 ```bash
 ssh-keygen -b 2048 -t rsa -q
 ssh-copy-id -i ~/.ssh/id_rsa.pub wangq@202.119.37.251
+```
+
+## 使用 Windows 下的 `.ssh`
+
+```shell
+cp -R /mnt/c/Users/wangq/.ssh/ ~/
+
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_rsa
+chmod 600 ~/.ssh/id_rsa.pub
+
 ```
 
 ## `htop`
@@ -511,6 +535,15 @@ rsvg-convert ~/Scripts/alignDB/doc/alignDB.svg -z 2 -f png -o ~/Scripts/alignDB/
 sudo apt-get -y update
 sudo apt-get -y install ttf-mscorefonts-installer
 sudo fc-cache -fsv
+```
+
+## `build-dep`
+
+```shell
+sudo apt build-dep <packagename>
+
+sudo apt install apt-rdepends
+apt-rdepends --build-depends --print-state --follow=DEPENDS <packagename>
 ```
 
 ## ssh for ubuntu-desktop
