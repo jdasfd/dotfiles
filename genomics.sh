@@ -14,13 +14,15 @@ brew tap brewsci/science
 
 brew install clustal-w mafft muscle trimal
 brew install lastz diamond paml fasttree iqtree # raxml
+brew install fastani mash
 brew install raxml --without-open-mpi
 brew install --force-bottle newick-utils
-brew install bowtie bowtie2 bwa samtools
+brew install fastqc # kat
+brew install bowtie bowtie2 bwa
+brew install samtools picard-tools
 brew install stringtie hisat2 # tophat cufflinks
 brew install seqtk minimap2 minigraph # gfatools
 brew install genometools # igvtools
-brew install canu fastqc picard-tools # kat
 brew install --build-from-source snp-sites # macOS bottles broken
 brew install bcftools
 
@@ -28,8 +30,9 @@ brew install edirect
 brew install sratoolkit
 
 # less used
-brew install augustus prodigal
+brew install augustus prodigal prokka
 brew install megahit spades sga
+brew install canu
 brew install quast --HEAD
 brew install ntcard
 brew install gatk freebayes
@@ -40,6 +43,7 @@ brew install --force-bottle blast
 echo "==> Custom tap"
 brew tap wang-q/tap
 brew install faops multiz sparsemem intspan
+# brew install multiz --cc=gcc
 # brew install jrunlist jrange
 
 echo "==> circos"

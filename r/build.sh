@@ -2,48 +2,79 @@
 
 BASE_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-# source URI
-sudo cp /etc/apt/sources.list /etc/apt/sources.list~
-sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
-sudo sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+RELEASE=$( ( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n1 )
+if [[ $(uname) == 'Darwin' ]]; then
+    # R itself
+    echo "Use the official build"
+    echo "https://mirrors.tuna.tsinghua.edu.cn/CRAN/bin/macosx/big-sur-arm64/base/R-4.2.2-arm64.pkg"
 
-sudo apt -y update
+    # packages
+    brew install cmake
+    brew install udunits
+    #    brew install gdal # Huge
+    exit
+else
+    if echo ${RELEASE} | grep CentOS > /dev/null ; then
+        # Manually
+        echo "You should build all items manually under CentOS"
+    else
+        # source URI
+        sudo cp /etc/apt/sources.list /etc/apt/sources.list~
+        sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
+        sudo sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+
+        sudo apt -y update
+
+        sudo apt -y install build-essential
+        sudo apt -y install gfortran
+
+        sudo apt -y install groff-base libxml2-dev gettext
+        sudo apt -y install libblas-dev liblapack-dev
+        sudo apt -y install libcurl4-openssl-dev libncurses5-dev libreadline-dev
+        sudo apt -y install libcairo2-dev libjpeg-dev libpango1.0-dev libpng-dev libtiff5-dev
+        sudo apt -y install libbz2-dev liblzma-dev zlib1g-dev
+
+        sudo apt -y install ghostscript libfreetype-dev fontconfig
+
+        # udunit2, gdal
+        sudo apt -y install cmake
+        sudo apt -y install udunits-bin libudunits2-dev
+        sudo apt -y install gdal-bin libgdal-dev
+
+        # brewed binaries confuse configure
+        hash brew 2>/dev/null && {
+            brew unlink pkg-config
+        }
+
+    fi
+fi
 
 # This command will install texlive
 # sudo apt -y build-dep r-base
 
-sudo apt -y install build-essential
-sudo apt -y install gfortran
-
 # sudo apt install apt-rdepends
 # apt-rdepends --build-depends --print-state --follow=DEPENDS r-base
 
-sudo apt -y install groff-base libxml2-dev gettext
-sudo apt -y install libblas-dev liblapack-dev
-sudo apt -y install libcurl4-openssl-dev libncurses5-dev libreadline-dev
-sudo apt -y install libcairo2-dev libjpeg-dev libpango1.0-dev libpng-dev libtiff5-dev
-sudo apt -y install libbz2-dev liblzma-dev zlib1g-dev
-
-sudo apt -y install ghostscript libfreetype-dev fontconfig
-
-# udunit2, gdal
-sudo apt -y install cmake
-sudo apt -y install udunits-bin libudunits2-dev
-sudo apt -y install gdal-bin libgdal-dev
 
 mkdir -p $HOME/share/R
 
 cd
-curl -L https://mirrors.tuna.tsinghua.edu.cn/CRAN/src/base/R-4/R-4.2.1.tar.gz |
+curl -L https://mirrors.ustc.edu.cn/CRAN/src/base/R-4/R-4.3.0.tar.gz |
     tar xvz
-cd R-4.2.1
+cd R-4.3.0
 
-# brewed binaries confuse configure
-hash brew 2>/dev/null && {
-    brew unlink pkg-config
-}
+hash gcc-9 2>/dev/null
+if [ $? == '0' ]; then
+    export CC=gcc-9
+    export CXX=g++-9
+    export FC=gfortran-9
+else
+    export CC=gcc
+    export CXX=g++
+    export FC=gfortran
+fi
 
-CC=gcc CXX=g++ FC=gfortran ./configure \
+./configure \
     --prefix="$HOME/share/R" \
     --enable-memory-profiling \
     --disable-java \
@@ -60,7 +91,6 @@ CC=gcc CXX=g++ FC=gfortran ./configure \
     --with-gnu-ld
 
 make -j 8
-make check
 
 bin/Rscript -e '
     capabilities();
@@ -72,16 +102,18 @@ bin/Rscript -e '
 make install
 
 cd
-rm -fr ~/R-4.2.1
+rm -fr ~/R-4.3.0
 
-if grep -q -i R_42_PATH $HOME/.bashrc; then
-    echo "==> .bashrc already contains R_42_PATH"
+if grep -q -i R_4_PATH $HOME/.bashrc; then
+    echo "==> .bashrc already contains R_4_PATH"
 else
-    echo "==> Updating .bashrc with R_42_PATH..."
-    R_42_PATH="export PATH=\"$HOME/share/R/bin:\$PATH\""
-    echo '# R_42_PATH' >> $HOME/.bashrc
-    echo $R_42_PATH    >> $HOME/.bashrc
+    echo "==> Updating .bashrc with R_4_PATH..."
+    R_4_PATH="export PATH=\"\$HOME/share/R/bin:\$PATH\""
+    echo '# R_4_PATH' >> $HOME/.bashrc
+    echo $R_4_PATH    >> $HOME/.bashrc
     echo >> $HOME/.bashrc
+
+    eval $R_4_PATH
 fi
 
 source ~/.bashrc

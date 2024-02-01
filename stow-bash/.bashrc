@@ -7,9 +7,6 @@ fi
 
 # User specific aliases and functions
 
-export PATH=/Library/TeX/texbin:$HOME/bin:$PATH
-export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig/:$PKG_CONFIG_PATH
-
 # Make vim the default editor.
 export EDITOR='vim'
 
@@ -41,12 +38,16 @@ export PATH="$HOME/share/mongodb/bin:$PATH"
 # mysqlbin
 export PATH="$HOME/share/mysql/bin:$PATH"
 
+# sqlite
+export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"
+
 # USTC mirror of Homebrew bottles
 # https://lug.ustc.edu.cn/wiki/mirrors/help/homebrew-bottles
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.ustc.edu.cn/brew.git"
 export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.ustc.edu.cn/homebrew-core.git"
 export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles"
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # RUST_PATH
 export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
@@ -60,8 +61,12 @@ export PATH="$HOME/bin:$PATH"
 
 export BLASTDB="$HOME/share/blast/db/"
 
-# PERL_534_PATH
-export PATH="/usr/local/Cellar/perl/5.34.0/bin:$PATH"
-
 # PYTHON_39_PATH
-export PATH="/usr/local/opt/python@3.9/bin:/usr/local/opt/python@3.9/libexec/bin:$PATH"
+export PATH="$HOME/share/Python/bin:$PATH"
+
+# PERL_534_PATH
+export PATH="$HOME/share/Perl/bin:$PATH"
+
+# R_42_PATH
+export PATH="/usr/local/bin:$PATH"
+
